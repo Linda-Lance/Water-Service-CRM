@@ -4,22 +4,27 @@ from datetime import date
 from ai_engine import search_customer, search_by_product, search_by_location
 from scheduler import generate_services_for_selected_date
 
-
 st.title("💧 Water Service CRM Dashboard")
 
 # CUSTOMER SEARCH
 st.header("🔎 Search Customer")
 
-name = st.text_input("Customer Name")
-phone = st.text_input("Phone Number")
+name = st.text_input("Customer Name (optional)")
+phone = st.text_input("Phone Number (optional)")
 
 if st.button("Search Customer"):
-    result = search_customer(name, phone)
 
-    if result.empty:
-        st.warning("No records found")
+    if not name and not phone:
+        st.warning("Please enter Name or Phone Number")
+
     else:
-        st.dataframe(result)
+        result = search_customer(name.strip(), phone.strip())
+
+        if result.empty:
+            st.warning("No matching records found")
+
+        else:
+            st.dataframe(result, use_container_width=True)
 
 
 # PRODUCT SEARCH
